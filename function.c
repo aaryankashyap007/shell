@@ -6,4 +6,8 @@ void function_handler(char *args[], int arg)
     {
         exit_bool = false;
     }
+    else if(strcmp(args[0], "hop") == 0)
+    {
+        hop(args, arg);
+    }
 }

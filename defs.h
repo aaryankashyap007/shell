@@ -30,4 +30,7 @@ void input_splitter(char commands[]);
 // function
 void function_handler(char *args[], int arg);
 
+// hop
+void hop(char *args[], int arg);
+
 #endif
