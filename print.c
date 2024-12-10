@@ -37,6 +37,7 @@ void start()
     else
     {
         perror("username");
+        exit(1);
     }
 
     struct utsname system_info;
@@ -48,6 +49,7 @@ void start()
     else
     {
         perror("uname");
+        exit(1);
     }
 
     getcwd(current_dir, MAX_LEN);
