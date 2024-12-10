@@ -5,6 +5,7 @@ char systemname[MAX_LEN];
 char home_dir[MAX_LEN];
 char current_dir[MAX_LEN];
 char display_dir[MAX_LEN];
+char prev_dir[MAX_LEN];
 
 void getdir()
 {
@@ -54,6 +55,7 @@ void start()
 
     getcwd(current_dir, MAX_LEN);
     getcwd(home_dir, MAX_LEN);
+    getcwd(prev_dir, MAX_LEN);
 
     getdir();
 }

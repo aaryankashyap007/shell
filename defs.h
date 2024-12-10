@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <sys/utsname.h>
+#include <errno.h>
 
 extern bool exit_bool;
 
@@ -22,6 +23,7 @@ extern char systemname[MAX_LEN];
 extern char home_dir[MAX_LEN];
 extern char current_dir[MAX_LEN];
 extern char display_dir[MAX_LEN];
+extern char prev_dir[MAX_LEN];
 
 // input
 void input_handler(char input[]);
@@ -32,5 +34,6 @@ void function_handler(char *args[], int arg);
 
 // hop
 void hop(char *args[], int arg);
+void hop_directory(char args[]);
 
 #endif

@@ -1,5 +1,5 @@
 all:
-	gcc main.c print.c input.c function.c -o shell
+	gcc main.c print.c input.c function.c hop.c -o shell
 	./shell
 
 clean:
