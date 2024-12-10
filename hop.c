@@ -55,22 +55,6 @@ void hop_directory(char args[])
         else
         {
             perror("hop failed");
-
-            switch (errno)
-            {
-            case ENOENT:
-                printf("Error: Directory does not exist.\n");
-                break;
-            case EACCES:
-                printf("Error: Permission denied.\n");
-                break;
-            case ENOTDIR:
-                printf("Error: A component of the path is not a directory.\n");
-                break;
-            default:
-                printf("Error: %s\n", strerror(errno));
-                break;
-            }
         }
     }
 }
