@@ -15,5 +15,8 @@ int main()
             break;
         }
     }
+    chdir(home_dir);
+    remove("shell");
+    printf("Thank You!\n");
     return 0;
 }

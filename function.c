@@ -10,4 +10,8 @@ void function_handler(char *args[], int arg)
     {
         hop(args, arg);
     }
+    else if (strcmp(args[0], "reveal") == 0)
+    {
+        reveal(args, arg);
+    }
 }

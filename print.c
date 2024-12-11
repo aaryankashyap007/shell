@@ -62,10 +62,10 @@ void start()
 
 void print()
 {
-    const char *green = "\033[1;32m";
-    const char *blue = "\033[1;34m";
-    const char *reset = "\033[0m";
-    printf("%s%s@%s%s:%s%s%s$ ", green, username, systemname, reset, blue, display_dir, reset);
+    // const char *green = "\033[1;32m";
+    // const char *blue = "\033[1;34m";
+    // const char *reset = "\033[0m";
+    printf("%s%s@%s%s:%s%s%s$ ", COLOR_GREEN, username, systemname, COLOR_RESET, COLOR_BLUE, display_dir, COLOR_RESET);
     char input[MAX_LEN];
     fgets(input, sizeof(input), stdin);
     size_t len = strlen(input);

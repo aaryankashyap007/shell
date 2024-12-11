@@ -37,6 +37,60 @@ void hop_directory(char args[])
         printf("%s\n", current_dir);
         getdir();
     }
+    else if (strncmp(args, "~/", 2) == 0)
+    {
+        char temp[MAX_LEN];
+        if (snprintf(temp, MAX_LEN, "%s/%s", home_dir, args + 2) >= MAX_LEN)
+        {
+            fprintf(stderr, "Path is too long.\n");
+            return;
+        }
+        if (chdir(temp) == 0)
+        {
+            strncpy(prev_dir, current_dir, MAX_LEN);
+            strncpy(current_dir, temp, MAX_LEN);
+            printf("%s\n", current_dir);
+            getdir();
+        }
+        else
+        {
+            perror("hop failed");
+        }
+    }
+    else if (strncmp(args, "../", 3) == 0)
+    {
+        char temp[MAX_LEN];
+        if (snprintf(temp, MAX_LEN, "%s/%s", current_dir, args) >= MAX_LEN)
+        {
+            fprintf(stderr, "Path is too long.\n");
+            return;
+        }
+        if (chdir(temp) == 0)
+        {
+            strncpy(prev_dir, current_dir, MAX_LEN);
+            getcwd(current_dir, MAX_LEN);
+            printf("%s\n", current_dir);
+            getdir();
+        }
+        else
+        {
+            perror("hop failed");
+        }
+    }
+    else if (strncmp(args, "/", 1) == 0)
+    {
+        if (chdir(args) == 0)
+        {
+            strncpy(prev_dir, current_dir, MAX_LEN);
+            getcwd(current_dir, MAX_LEN);
+            printf("%s\n", current_dir);
+            getdir();
+        }
+        else
+        {
+            perror("hop failed");
+        }
+    }
     else
     {
         // printf("5\n");
