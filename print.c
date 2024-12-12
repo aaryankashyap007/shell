@@ -6,6 +6,75 @@ char home_dir[MAX_LEN];
 char current_dir[MAX_LEN];
 char display_dir[MAX_LEN];
 char prev_dir[MAX_LEN];
+char filename[MAX_LEN];
+char lastcommand[MAX_LEN];
+
+char *get_last_line()
+{
+    FILE *file = fopen(filename, "r");
+    if (file == NULL)
+    {
+        perror("Unable to open file");
+        return NULL;
+    }
+
+    if (fseek(file, 0, SEEK_END) != 0)
+    {
+        perror("Error seeking to the end of the file");
+        fclose(file);
+        return NULL;
+    }
+
+    long file_size = ftell(file);
+    if (file_size == -1)
+    {
+        perror("Error getting file size");
+        fclose(file);
+        return NULL;
+    }
+
+    long pos = file_size - 1;
+    int ch;
+    while (pos >= 0)
+    {
+        fseek(file, pos, SEEK_SET);
+        ch = fgetc(file);
+        if (ch == '\n' && pos != file_size - 1)
+        {
+            pos++;
+            break;
+        }
+        pos--;
+    }
+
+    if (pos < 0)
+        pos = 0;
+
+    fseek(file, pos, SEEK_SET);
+    size_t buffer_size = 1024;
+    char *buffer = malloc(buffer_size);
+    if (buffer == NULL)
+    {
+        perror("Memory allocation failed");
+        fclose(file);
+        return NULL;
+    }
+
+    if (fgets(buffer, buffer_size, file) != NULL)
+    {
+        size_t len = strlen(buffer);
+        if (len > 0 && buffer[len - 1] == '\n')
+            buffer[len - 1] = '\0';
+    }
+    else
+    {
+        free(buffer);
+        buffer = NULL;
+    }
+
+    fclose(file);
+    return buffer;
+}
 
 void getdir()
 {
@@ -58,6 +127,30 @@ void start()
     getcwd(prev_dir, MAX_LEN);
 
     getdir();
+
+    char temp_filename[MAX_LEN];
+    strncpy(temp_filename, "log_commands.txt", MAX_LEN);
+    FILE *file = fopen(temp_filename, "a");
+    if (file == NULL)
+    {
+        perror("Failed to create file");
+        return;
+    }
+    fclose(file);
+    strcat(filename, home_dir);
+    strcat(filename, "/");
+    strcat(filename, temp_filename);
+    if (get_last_line() == NULL)
+    {
+        strncpy(lastcommand, "\0", MAX_LEN);
+    }
+    else
+    {
+        char temp[MAX_LEN];
+        strncpy(temp, get_last_line(), MAX_LEN);
+        temp[strlen(temp) - 1] = '\0';
+        strncpy(lastcommand, temp, MAX_LEN);
+    }
 }
 
 void print()

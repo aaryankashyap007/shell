@@ -14,4 +14,8 @@ void function_handler(char *args[], int arg)
     {
         reveal(args, arg);
     }
+    else if (strcmp(args[0], "log") == 0)
+    {
+        log_handler(args, arg);
+    }
 }

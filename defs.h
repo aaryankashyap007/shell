@@ -3,7 +3,8 @@
 
 #define MAX_ENTRIES 1024
 #define MAX_LEN 256
-#define MAX_ARGS 8
+#define MAX_FILES 15
+#define MAX_ARGS 16
 
 #define COLOR_RESET "\033[0m"
 #define COLOR_BLUE "\033[1;34m"
@@ -23,8 +24,11 @@
 #include <time.h>
 #include <pwd.h>
 #include <grp.h>
+#include <ctype.h>
 
 extern bool exit_bool;
+extern char filename[MAX_LEN];
+extern char lastcommand[MAX_LEN];
 
 // print
 void start();
@@ -40,6 +44,9 @@ extern char prev_dir[MAX_LEN];
 // input
 void input_handler(char input[]);
 void input_splitter(char commands[]);
+void truncate_and_append(char *args[], int arg);
+void append_to_file(char *args[], int arg);
+int count_lines_in_file();
 
 // function
 void function_handler(char *args[], int arg);
@@ -57,5 +64,8 @@ void detail(char path[]);
 void normal(char path[]);
 void handle_flags(char flag[], char path[]);
 int compare_strings(const void *a, const void *b);
+
+// log
+void log_handler(char *args[], int arg);
 
 #endif

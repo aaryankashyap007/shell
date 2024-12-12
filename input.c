@@ -1,5 +1,104 @@
 #include "defs.h"
 
+int count_lines_in_file()
+{
+    FILE *file = fopen(filename, "r");
+    if (file == NULL)
+    {
+        perror("Failed to open file");
+        return -1;
+    }
+
+    int line_count = 0;
+    char ch;
+
+    while ((ch = fgetc(file)) != EOF)
+    {
+        if (ch == '\n')
+        {
+            line_count++;
+        }
+    }
+
+    fclose(file);
+    return line_count;
+}
+
+void truncate_and_append(char *args[], int arg)
+{
+    FILE *file = fopen(filename, "r");
+    if (file == NULL)
+    {
+        perror("Failed to open file for reading");
+        return;
+    }
+
+    FILE *temp = tmpfile();
+    if (temp == NULL)
+    {
+        perror("Failed to create temporary file");
+        fclose(file);
+        return;
+    }
+
+    char buffer[MAX_LEN];
+    int skip_first = 1;
+
+    while (fgets(buffer, sizeof(buffer), file))
+    {
+        if (skip_first)
+        {
+            skip_first = 0;
+            continue;
+        }
+        fputs(buffer, temp);
+    }
+
+    fclose(file);
+
+    for (int i = 0; i < arg; i++)
+    {
+        fprintf(temp, "%s ", args[i]);
+    }
+
+    fprintf(temp, "\n");
+
+    file = fopen(filename, "w");
+    if (file == NULL)
+    {
+        perror("Failed to open file for writing");
+        fclose(temp);
+        return;
+    }
+
+    rewind(temp);
+    while (fgets(buffer, sizeof(buffer), temp))
+    {
+        fputs(buffer, file);
+    }
+
+    fclose(temp);
+    fclose(file);
+}
+
+void append_to_file(char *args[], int arg)
+{
+    FILE *file = fopen(filename, "a");
+    if (file == NULL)
+    {
+        perror("Failed to open file");
+        return;
+    }
+
+    for (int i = 0; i < arg; i++)
+    {
+        fprintf(file, "%s ", args[i]);
+    }
+
+    fprintf(file, "\n");
+    fclose(file);
+}
+
 void input_splitter(char commands[])
 {
     char *args[MAX_ARGS];
@@ -32,6 +131,38 @@ void input_splitter(char commands[])
         i++;
     }
     // printf("%d\n", i);
+    char temp[MAX_LEN];
+    strncpy(temp, "\0", MAX_LEN);
+    for (int j = 0; j < i; j++)
+    {
+        strcat(temp, args[j]);
+        if (j < i - 1)
+        {
+            strcat(temp, " ");
+        }
+    }
+    if (strcmp(lastcommand, temp) != 0 && strcmp(args[0], "log") != 0)
+    {
+        if (count_lines_in_file() == MAX_FILES)
+        {
+            truncate_and_append(args, i);
+        }
+        else
+        {
+            append_to_file(args, i);
+        }
+    }
+
+    strncpy(lastcommand, "\0", MAX_LEN);
+    for (int j = 0; j < i; j++)
+    {
+        strcat(lastcommand, args[j]);
+        if (j < i - 1)
+        {
+            strcat(lastcommand, " ");
+        }
+    }
+
     function_handler(args, i);
     for (int i = 0; i < MAX_ARGS; i++)
     {
