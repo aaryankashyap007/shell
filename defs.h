@@ -21,14 +21,20 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <time.h>
 #include <pwd.h>
 #include <grp.h>
 #include <ctype.h>
+#include <sys/times.h>
 
 extern bool exit_bool;
 extern char filename[MAX_LEN];
 extern char lastcommand[MAX_LEN];
+extern clock_t start_time, end_time;
+extern double time_taken;
+extern char last_input[MAX_LEN];
+extern long clock_ticks;
 
 // print
 void start();
@@ -67,5 +73,12 @@ int compare_strings(const void *a, const void *b);
 
 // log
 void log_handler(char *args[], int arg);
+
+// system commands
+void system_commands(char *args[]);
+
+// proclore
+void proclore_print(const char *pid);
+void proclore(char*args[], int arg);
 
 #endif

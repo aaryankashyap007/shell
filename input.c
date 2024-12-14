@@ -1,5 +1,7 @@
 #include "defs.h"
 
+char last_input[MAX_LEN];
+
 int count_lines_in_file()
 {
     FILE *file = fopen(filename, "r");
@@ -163,7 +165,10 @@ void input_splitter(char commands[])
         }
     }
 
+    strncpy(last_input, args[0], MAX_LEN);
+    start_time = times(NULL);
     function_handler(args, i);
+    end_time = times(NULL);
     for (int i = 0; i < MAX_ARGS; i++)
     {
         if (args[i] != NULL)

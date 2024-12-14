@@ -4,14 +4,14 @@ bool exit_bool = true;
 
 int main()
 {
-    system("clear");
+    // system("clear");
     start();
     while (1)
     {
         print();
         if(!exit_bool)
         {
-            system("clear");
+            // system("clear");
             break;
         }
     }

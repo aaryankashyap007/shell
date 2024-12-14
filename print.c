@@ -8,6 +8,9 @@ char display_dir[MAX_LEN];
 char prev_dir[MAX_LEN];
 char filename[MAX_LEN];
 char lastcommand[MAX_LEN];
+double time_taken;
+long clock_ticks;
+clock_t start_time, end_time;
 
 char *get_last_line()
 {
@@ -151,6 +154,12 @@ void start()
         temp[strlen(temp) - 1] = '\0';
         strncpy(lastcommand, temp, MAX_LEN);
     }
+    clock_ticks = sysconf(_SC_CLK_TCK);
+    if (clock_ticks == -1)
+    {
+        perror("sysconf failed");
+        return;
+    }
 }
 
 void print()
@@ -158,7 +167,15 @@ void print()
     // const char *green = "\033[1;32m";
     // const char *blue = "\033[1;34m";
     // const char *reset = "\033[0m";
-    printf("%s%s@%s%s:%s%s%s$ ", COLOR_GREEN, username, systemname, COLOR_RESET, COLOR_BLUE, display_dir, COLOR_RESET);
+    time_taken = ((double)(end_time - start_time)) / clock_ticks;
+    if (time_taken > 2)
+    {
+        printf("%s%s@%s%s:%s%s%s %s : %ds$ ", COLOR_GREEN, username, systemname, COLOR_RESET, COLOR_BLUE, display_dir, COLOR_RESET, last_input, (int)time_taken);
+    }
+    else
+    {
+        printf("%s%s@%s%s:%s%s%s$ ", COLOR_GREEN, username, systemname, COLOR_RESET, COLOR_BLUE, display_dir, COLOR_RESET);
+    }
     char input[MAX_LEN];
     fgets(input, sizeof(input), stdin);
     size_t len = strlen(input);
