@@ -179,14 +179,50 @@ void input_splitter(char commands[])
     }
 }
 
-void input_handler(char input[])
+void multiple_function_handler(char input[])
 {
     char *token;
     char *saveptr;
-    token = strtok_r(input, "&;", &saveptr);
+    token = strtok_r(input, ";", &saveptr);
     while (token != NULL)
     {
         input_splitter(token);
-        token = strtok_r(NULL, "&;", &saveptr);
+        token = strtok_r(NULL, ";", &saveptr);
     }
+}
+
+void input_handler(char input[])
+{
+    char *copy = strdup(input);
+    if (copy == NULL)
+    {
+        perror("Memory allocation failed");
+        return;
+    }
+
+    char *chunks[1024];
+    int count = 0;
+
+    char *token = strtok(copy, "&");
+    while (token != NULL)
+    {
+        chunks[count++] = token;
+        token = strtok(NULL, "&");
+    }
+
+    for (int i = 0; i < count - 1; i++)
+    {
+        // printf("background\n");
+        is_bg = true;
+        multiple_function_handler(chunks[i]);
+    }
+
+    if (count > 0)
+    {
+        // printf("foreground\n");
+        is_bg = false;
+        multiple_function_handler(chunks[count - 1]);
+    }
+
+    free(copy);
 }

@@ -11,6 +11,7 @@ char lastcommand[MAX_LEN];
 double time_taken;
 long clock_ticks;
 clock_t start_time, end_time;
+bool is_bg;
 
 char *get_last_line()
 {
@@ -160,6 +161,7 @@ void start()
         perror("sysconf failed");
         return;
     }
+    is_bg = false;
 }
 
 void print()

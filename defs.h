@@ -35,6 +35,7 @@ extern clock_t start_time, end_time;
 extern double time_taken;
 extern char last_input[MAX_LEN];
 extern long clock_ticks;
+extern bool is_bg;
 
 // print
 void start();
